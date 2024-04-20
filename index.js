@@ -1,15 +1,25 @@
-const vision = require('@google-cloud/vision');
+const  CREDENTIALS = 'credentials.json';
 
-// Creates a client
-const client = new vision.ImageAnnotatorClient();
+const CONFIG = {
+  credentials: {
+    private_key: CREDENTIALS.private_key,
+    client_email: CREDENTIALS.client_email
+  }
+}
 
-/**
- * TODO(developer): Uncomment the following line before running the sample.
- */
-const fileName = 'C:\Users\anayk\Downloads\landscape-1466459095-american-landmarks-mount-rushmore.jpg';
+async function getLandmark() {
+    // Imports the Google Cloud client library
+    const vision = require('@google-cloud/vision');
+  
+    // Creates a client
+    const client = new vision.ImageAnnotatorClient(CONFIG);
+  
+    // Performs landmark detection on the image file
+    const [result] = await client.landmarkDetection('IMG_6516.jpg');
+    const landmarks = result.landmarkAnnotations;
+    console.log('Landmarks:');
+    landmarks.forEach(landmark => console.log(landmark.description));
+  }
+  getLandmark();
 
-// Performs landmark detection on the local file
-const [result] = await client.landmarkDetection(fileName);
-const landmarks = result.landmarkAnnotations;
-console.log('Landmarks:');
-landmarks.forEach(landmark => console.log(landmark));
+ 
