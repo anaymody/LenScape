@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/anaymody/LenScape#readme",
   "dependencies": {
-    "@google-cloud/vision": "^4.2.1"
+    "@google-cloud/vision": "^4.2.1",
+    "@google/generative-ai": "^0.7.1",
+    "dotenv": "^16.4.5"
   }
 }
