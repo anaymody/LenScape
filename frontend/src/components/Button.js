@@ -8,7 +8,7 @@ export default function Button({ onPress, icon, color }) {
             <Entypo name={icon} size={28} color={color ? color : '#f1f1f1'} />
         </TouchableOpacity>
     );
-}
+};
 
 const styles = StyleSheet.create({
     button: {
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
         color: '#f1f1f1',
         marginLeft: 10,
     }
-})
+});
