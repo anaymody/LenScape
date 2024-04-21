@@ -1,0 +1,27 @@
+{
+  "name": "lenscape",
+  "version": "1.0.0",
+  "description": "lenscape app for lahacks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anaymody/LenScape.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anaymody/LenScape/issues"
+  },
+  "homepage": "https://github.com/anaymody/LenScape#readme",
+  "dependencies": {
+    "@google-cloud/vision": "^4.2.1",
+    "@google/generative-ai": "^0.7.1",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "fs": "^0.0.1-security"
+  }
+}
