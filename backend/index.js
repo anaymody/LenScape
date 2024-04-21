@@ -20,7 +20,72 @@ const CONFIG = {
   }
 }
 
-async function getLandmark() {
+const express = require("express");
+const http = require("http")
+
+const bodyParser = require("body-parser");
+
+const app = express();
+
+const hostName = "localhost"
+const PORT = process.env.PORT || 3030;
+
+app.use(bodyParser.json());
+
+const server = http.createServer(app)
+
+server.listen(PORT, hostName, () => {
+  console.log(`Server running at ${hostName}:${PORT}`)
+})
+
+// Define your API routes here
+app.get("/api/data", (req, res) => {
+    console.log("Simulator connected");
+    getLandmark().then(
+      function(result){
+        console.log("success")
+        console.log(result)
+        const data = {
+          message: result
+        }
+        console.log(data)
+        res.json(data)
+      }
+    ).catch(
+      function(error){
+        console.log("error")
+        console.log(error)
+        res.json(error)
+      }
+    )
+});
+
+app.post('/getImageLoc', (req, res) => {
+    console.log('image coming in')
+    let imageData = req.body.imageData
+
+    console.log("yeahh")
+
+    getLandmark('data:image/jpg;base64,' + imageData).then(
+      function(result){
+        console.log("success")
+        console.log(result)
+        const data = {
+          message: result
+        }
+        console.log(data)
+        res.json(data)
+      }
+    ).catch(
+      function(error){
+        console.log("error")
+        console.log(error)
+        res.json(error)
+      }
+    )
+})
+
+async function getLandmark(imageURI) {
     // Imports the Google Cloud client library
     const vision = require('@google-cloud/vision');
   
@@ -28,17 +93,26 @@ async function getLandmark() {
     const client = new vision.ImageAnnotatorClient(CONFIG);
   
     // Performs landmark detection on the image file
-    const [result] = await client.landmarkDetection('landscape-1466459095-american-landmarks-mount-rushmore.jpg');
-    const landmarks = result.landmarkAnnotations;
-    
-    console.log('Landmarks:');
-    landmarks.forEach(landmark => console.log(landmark.description + JSON.stringify(landmark.locations)));
+    let result
+    let landmarks
+    let message
 
-    return landmarks;
+    try {
+      [result] = await client.landmarkDetection(imageURI);
+      landmarks = result.landmarkAnnotations;
+      landmarks.forEach(landmark => {
+        console.log(landmark.description + JSON.stringify(landmark.locations)),
+        message = landmark.description});
+    } catch(e){
+      message = e
+    }
+  
+    return message;
   }
 
 const dotenv = require("dotenv");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { hostname } = require("os");
 
 dotenv.config();
 
@@ -53,36 +127,36 @@ async function searchLandmarks() {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
-    console.log(text);
+    // console.log(text);
 
     return text;
   }
   
-  async function checkLandmarksInText() {
-    const landmarks = await getLandmark();
-    const text = await searchLandmarks();
+//   async function checkLandmarksInText() {
+//     const landmarks = await getLandmark();
+//     const text = await searchLandmarks();
     
-    let found_location = false;
-    let location_name;
-    landmarks.forEach(landmark => {
-        if (text.includes(landmark.description)) {
-            console.log(`${landmark.description} is included in the generated text.`);
-            found_location = true;
-            location_name = landmark.description;
-        } else {
-            console.log(`${landmark.description} is not included in the generated text.`);
-        }
-    });
-    if (found_location) {
-        console.log(`${location_name} is was validated.`)
-        return true;
-    }
-    else {
-        return false;
-    }
-}
+//     let found_location = false;
+//     let location_name;
+//     landmarks.forEach(landmark => {
+//         if (text.includes(landmark.description)) {
+//             console.log(`${landmark.description} is included in the generated text.`);
+//             found_location = true;
+//             location_name = landmark.description;
+//         } else {
+//             console.log(`${landmark.description} is not included in the generated text.`);
+//         }
+//     });
+//     if (found_location) {
+//         console.log(`${location_name} is was validated.`)
+//         return true;
+//     }
+//     else {
+//         return false;
+//     }
+// }
 
-checkLandmarksInText();
+// checkLandmarksInText();
 
   
  
