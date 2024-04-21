@@ -21,21 +21,25 @@ const CONFIG = {
 }
 
 const express = require("express");
-const http = require("http")
+// const http = require("http")
 
 const bodyParser = require("body-parser");
 
 const app = express();
 
-const hostName = "localhost"
+// const hostName = "localhost"
 const PORT = process.env.PORT || 3030;
 
 app.use(bodyParser.json());
 
-const server = http.createServer(app)
+// const server = http.createServer(app)
 
-server.listen(PORT, hostName, () => {
-  console.log(`Server running at ${hostName}:${PORT}`)
+// server.listen(PORT, hostName, () => {
+//   console.log(`Server running at ${hostName}:${PORT}`)
+// })
+
+app.listen(PORT, ()=>{
+  console.log(`server started on port ${PORT}`)
 })
 
 // Define your API routes here
