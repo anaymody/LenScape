@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "LenMap",
+    "slug": "LenMap",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier":"org.name.LenMap",
+      "config":{
+        "googleMapsApiKey": "AIzaSyDS_aVjH0yfGCilqLfAqunUlJUH6XkydoM"
+      }
+    }
+  }
+}
