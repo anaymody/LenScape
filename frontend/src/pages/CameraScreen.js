@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View, Image } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { Camera, CameraType } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import Button from '../components/Button';
+import axios from 'axios';
 
 export default function CameraScreen({navigation}) {
   const [hasCameraPermissions, setHasCameraPermissions] = useState(null);
@@ -11,6 +13,31 @@ export default function CameraScreen({navigation}) {
   const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
   const cameraRef = useRef(null);
 
+  const [selectedImage, setSelectedImage] = useState(null);
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setSelectedImage(result.uri);
+      axios.post('http://10.20.0.123:3030/getImageLoc', {
+        imageData: selectedImage
+      }).then(
+        function(result){
+          console.log(result)
+        }
+      ).catch(
+        function(error){
+          console.log("asdf")
+          console.log(error)
+        }
+      )
+    }
+  };
   useEffect(() => {
     (async () => {
       MediaLibrary.requestPermissionsAsync();
@@ -22,9 +49,24 @@ export default function CameraScreen({navigation}) {
   const takePicture = async () => {
     if(cameraRef){
       try {
-        const data = await cameraRef.current.takePictureAsync();
-        console.log(data);
+        const data = await cameraRef.current.takePictureAsync({
+          base64: true
+        });
+
         setImage(data.uri);
+
+        axios.post('http://10.20.0.123:3030/getImageLoc', {
+          imageData: data.base64
+        }).then(
+          function(result){
+            console.log(result)
+          }
+        ).catch(
+          function(error){
+            console.log("asdf")
+            console.log(error)
+          }
+        )
       } catch(e) {
         console.log(e)
       }
@@ -73,7 +115,14 @@ export default function CameraScreen({navigation}) {
           <Button title={'Save'} icon="check" onPress={savePicture}/>
         </View>
         :
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingHorizontal: 50
+        }}>
         <Button title={'take a picture'} icon="camera" onPress={takePicture}/>
+        <Button title={'upload picture'} icon="image" onPress={pickImage}/>
+        </View>
         }
       </View>
     </View>
@@ -90,5 +139,11 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
     borderRadius: 20
-  }
+  },
+  image: {
+    width: 300,
+    height: 300,
+    marginTop: 20,
+    resizeMode: 'contain',
+  },
 });
