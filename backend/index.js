@@ -21,25 +21,21 @@ const CONFIG = {
 }
 
 const express = require("express");
-// const http = require("http")
+const http = require("http")
 
 const bodyParser = require("body-parser");
 
 const app = express();
 
-// const hostName = "localhost"
+const hostName = "10.20.0.123"
 const PORT = process.env.PORT || 3030;
 
 app.use(bodyParser.json());
 
-// const server = http.createServer(app)
+const server = http.createServer(app)
 
-// server.listen(PORT, hostName, () => {
-//   console.log(`Server running at ${hostName}:${PORT}`)
-// })
-
-app.listen(PORT, ()=>{
-  console.log(`server started on port ${PORT}`)
+server.listen(PORT, hostName, () => {
+  console.log(`Server running at ${hostName}:${PORT}`)
 })
 
 // Define your API routes here
@@ -65,11 +61,11 @@ app.get("/api/data", (req, res) => {
 });
 
 app.post('/getImageLoc', (req, res) => {
-    console.log('image coming in')
     let imageData = req.body.imageData
-    console.log(imageData);
-    getLandmark('data:image/jpg;base64,' + imageData).then(
+    
+    getLandmark(imageData).then(
       function(result){
+        console.log(imageData)
         console.log("success")
         console.log(result)
         const data = {
