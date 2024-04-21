@@ -67,9 +67,7 @@ app.get("/api/data", (req, res) => {
 app.post('/getImageLoc', (req, res) => {
     console.log('image coming in')
     let imageData = req.body.imageData
-
-    console.log("yeahh")
-
+    console.log(imageData);
     getLandmark('data:image/jpg;base64,' + imageData).then(
       function(result){
         console.log("success")
